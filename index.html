@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mingyang.cc.cd</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            padding: 2rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+
+        .page-title {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 2rem;
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+
+        .search-container {
+            width: 100%;
+            margin-bottom: 2.5rem;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        #search-input:focus {
+            box-shadow: 0 4px 20px rgba(66, 135, 245, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* 分类标题 */
+        .cate-title {
+            font-size: 1.3rem;
+            color: #2d3748;
+            margin: 2rem 0 1rem;
+            padding-left: 0.5rem;
+            border-left: 4px solid #4285f5;
+        }
+
+        .links-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .link-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #2d3748;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            cursor: pointer;
+        }
+
+        .link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .link-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #4285f5;
+        }
+
+        .link-desc {
+            font-size: 0.9rem;
+            color: #718096;
+            line-height: 1.5;
+        }
+
+        .no-result {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 3rem 0;
+            color: #718096;
+            font-size: 1.1rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="page-title">学如逆水行舟，不进则退。</h1>
+
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="搜索链接名称 / 描述...">
+    </div>
+
+    <!-- 第一部分：公知常用站点 -->
+    <h2 class="cate-title">常用公共站点</h2>
+    <div class="links-container" id="public-links">
+        <a href="https://github.com" class="link-card" data-name="GitHub">
+            <div class="link-title">GitHub</div>
+            <div class="link-desc">全球最大代码托管平台，开源项目聚集地</div>
+        </a>
+        <a href="https://www.baidu.com/" class="link-card" data-name="百度">
+            <div class="link-title">百度</div>
+            <div class="link-desc">百度一下，你就知道</div>
+        </a>
+        <a href="https://www.sogou.com/" class="link-card" data-name="搜狗">
+            <div class="link-title">搜狗</div>
+            <div class="link-desc">搜狗搜索引擎 - 上网从搜狗开始</div>
+        </a>
+        <a href="https://cn.bing.com/" class="link-card" data-name="必应">
+            <div class="link-title">必应</div>
+            <div class="link-desc">快乐搜索，有问必应</div>
+        </a>
+    </div>
+
+    <!-- 第二部分：个人专属资源 -->
+    <h2 class="cate-title">个人专属资源</h2>
+    <div class="links-container" id="private-links">
+        <a href="https://mubucm.com/doc/3bXbpF-Yz0O" class="link-card" data-name="mubu-测试">
+            <div class="link-title">欢迎！</div>
+            <div class="link-desc">个人欢迎文档入口</div>
+        </a>
+        <a href="https://share.mubu.com/doc/4RkFa_ALXvt" class="link-card" data-name="软件分享">
+            <div class="link-title">软件库</div>
+            <div class="link-desc">常用工具软件库，个人常用，轻量稳定、易用高效。</div>
+        </a>
+        <a href="https://share.mubu.com/doc/47Enz-Dvlrt" class="link-card" data-name="DELL IDRIC相关01">
+            <div class="link-title">DELL IDRIC相关01</div>
+            <div class="link-desc">DELL IDRIC 提示连接不安全</div>
+        </a>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('search-input');
+        // 获取所有分类下的卡片
+        const allCards = document.querySelectorAll('.link-card');
+        const publicBox = document.getElementById('public-links');
+        const privateBox = document.getElementById('private-links');
+
+        searchInput.addEventListener('input', function (e) {
+            const searchText = e.target.value.toLowerCase().trim();
+            let publicHas = false, privateHas = false;
+
+            allCards.forEach(card => {
+                const name = card.dataset.name.toLowerCase();
+                const title = card.querySelector('.link-title').innerText.toLowerCase();
+                const desc = card.querySelector('.link-desc').innerText.toLowerCase();
+                const match = name.includes(searchText) || title.includes(searchText) || desc.includes(searchText);
+
+                if (match) {
+                    card.classList.remove('hidden');
+                    // 判断所属容器
+                    if(publicBox.contains(card)) publicHas = true;
+                    if(privateBox.contains(card)) privateHas = true;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            // 清空原有无结果提示
+            document.querySelectorAll('.no-result').forEach(el=>el.remove());
+
+            // 公共区无结果
+            if(!publicHas && searchText) {
+                let tip = document.createElement('div');
+                tip.className = 'no-result';
+                tip.textContent = '常用站点暂无匹配内容';
+                publicBox.appendChild(tip);
+            }
+            // 个人区无结果
+            if(!privateHas && searchText) {
+                let tip = document.createElement('div');
+                tip.className = 'no-result';
+                tip.textContent = '个人资源暂无匹配内容';
+                privateBox.appendChild(tip);
+            }
+        });
+    </script>
+</body>
+</html>
